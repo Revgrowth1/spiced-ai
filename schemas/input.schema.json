@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Revgrowth1/spiced-ai/schemas/input.schema.json",
+  "title": "SPICED AI Input",
+  "description": "Normalized transcript + context format consumed by spiced-ai prompts. Provider adapters (Fireflies, Gong, Fathom, Sybill) normalize their raw outputs into this shape.",
+  "type": "object",
+  "required": ["transcript", "deal_context"],
+  "properties": {
+    "transcript": {
+      "type": "object",
+      "required": ["utterances"],
+      "properties": {
+        "utterances": {
+          "type": "array",
+          "description": "Ordered list of spoken turns.",
+          "items": {
+            "type": "object",
+            "required": ["speaker", "role", "text"],
+            "properties": {
+              "speaker": {"type": "string", "description": "Display name of the speaker"},
+              "role": {
+                "type": "string",
+                "enum": ["rep", "prospect", "unknown"],
+                "description": "Which side of the call"
+              },
+              "text": {"type": "string", "description": "What they said"},
+              "timestamp_sec": {
+                "type": "number",
+                "description": "Seconds from start of call (for citation in output)"
+              },
+              "sentiment": {
+                "type": "string",
+                "enum": ["positive", "neutral", "negative"],
+                "description": "Optional, from upstream provider"
+              }
+            }
+          }
+        },
+        "duration_sec": {"type": "integer"},
+        "recorded_at": {"type": "string", "format": "date-time"},
+        "source": {
+          "type": "string",
+          "enum": ["fireflies", "gong", "fathom", "sybill", "otter", "zoom", "manual"]
+        },
+        "source_url": {"type": "string", "format": "uri", "description": "Link back to original recording"}
+      }
+    },
+    "deal_context": {
+      "type": "object",
+      "required": ["deal_size_band"],
+      "properties": {
+        "deal_id": {"type": "string", "description": "Your CRM's deal identifier"},
+        "company": {"type": "string"},
+        "deal_size_band": {
+          "type": "string",
+          "enum": ["SMB", "MID", "ENTERPRISE"]
+        },
+        "acv_estimate_usd": {"type": "number"},
+        "stage": {
+          "type": "string",
+          "enum": ["discovery", "qualification", "demo", "proposal", "negotiation", "closing", "closed_won", "closed_lost"]
+        },
+        "prior_calls_count": {"type": "integer", "minimum": 0},
+        "age_days": {"type": "integer", "minimum": 0, "description": "Days since deal opened"},
+        "last_contact_days_ago": {"type": "integer", "minimum": 0},
+        "solution_offered": {"type": "string", "description": "What product/package you're selling"}
+      }
+    },
+    "company_context": {
+      "type": "object",
+      "description": "Research on the prospect's company (from CRM, LinkedIn, web).",
+      "properties": {
+        "industry": {"type": "string"},
+        "employees": {"type": "integer"},
+        "revenue_usd": {"type": "number"},
+        "recent_news": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "headline": {"type": "string"},
+              "date": {"type": "string", "format": "date"},
+              "relevance": {"type": "string"}
+            }
+          }
+        },
+        "funding_stage": {"type": "string"},
+        "tech_stack": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "rep_context": {
+      "type": "object",
+      "description": "Only required for coaching mode.",
+      "properties": {
+        "rep_id": {"type": "string"},
+        "name": {"type": "string"},
+        "tenure_months": {"type": "integer"},
+        "focus_areas": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Optional coaching focus (e.g. 'objection_handling', 'discovery_depth')"
+        }
+      }
+    },
+    "prior_analyses": {
+      "type": "array",
+      "description": "Most recent 3 SPICED output objects on this deal. Used for probability drift and red-flag detection.",
+      "items": {"$ref": "output.schema.json"}
+    },
+    "email_signals": {
+      "type": "object",
+      "description": "Optional signals from email thread - used by red-flag detector.",
+      "properties": {
+        "avg_response_latency_hours": {"type": "number"},
+        "response_latency_trend": {
+          "type": "string",
+          "enum": ["decreasing", "stable", "increasing", "unresponsive"]
+        },
+        "reschedule_count": {"type": "integer"},
+        "message_length_trend": {
+          "type": "string",
+          "enum": ["growing", "stable", "shrinking"]
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "description": "The merged config YAML (see config/default.yaml). Passed directly."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["post_call", "coaching", "pre_call", "red_flags"],
+      "description": "Which prompt to run"
+    },
+    "output_format": {
+      "type": "string",
+      "enum": ["slack", "crm", "internal"],
+      "default": "internal"
+    }
+  }
+}

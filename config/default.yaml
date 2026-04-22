@@ -1,0 +1,106 @@
+# Default config - generic B2B SaaS
+# Copy to {your_name}.yaml and customize. Passed into prompts via {{CONFIG_YAML}}.
+
+profile:
+  name: "default"
+  company: "Your Company"
+  product_one_liner: "What you sell, in one sentence."
+  url: "https://example.com"
+
+icp:
+  industries:
+    - "SaaS"
+    - "B2B services"
+  company_size:
+    employees_min: 50
+    employees_max: 2000
+    revenue_min_usd: 5000000
+    revenue_max_usd: 500000000
+  titles_primary:  # your champions typically hold these titles
+    - "VP of Revenue Operations"
+    - "Director of Sales"
+    - "Chief Revenue Officer"
+  titles_economic_buyer:
+    - "CFO"
+    - "VP of Finance"
+    - "CEO"
+  titles_technical_evaluator:
+    - "Sales Ops Manager"
+    - "RevOps Analyst"
+
+deal_sizing:
+  # ACV bands drive template depth. Adjust to your business.
+  smb_max_acv_usd: 25000
+  mid_max_acv_usd: 250000
+  # Anything above mid_max is enterprise.
+
+sales_motion:
+  typical_cycle_days: 45           # from first call to close
+  typical_calls_to_close: 4
+  expected_stakeholders_smb: 1      # just the champion
+  expected_stakeholders_mid: 3      # champion + economic + technical
+  expected_stakeholders_enterprise: 5+
+
+success_metrics:
+  # ROI levers your product pulls. Used in Impact analysis.
+  - metric: "pipeline velocity"
+    typical_lift_pct: 20
+    benchmark_source: "internal customer data"
+  - metric: "win rate"
+    typical_lift_pct: 15
+    benchmark_source: "internal customer data"
+
+competitors:
+  # Known alternatives. Used to detect competitive displacement signals.
+  # Keep this list current - stale competitor lists cause false negatives.
+  - name: "CompetitorA"
+    positioning: "Lower price, fewer features, weaker enterprise security"
+    common_objections_they_create:
+      - "CompetitorA is cheaper"
+    our_counter: "3 enterprise customers churned from CompetitorA citing [specific gap]"
+  - name: "Status Quo (homegrown / spreadsheets)"
+    positioning: "Free, familiar, unscalable"
+    common_objections_they_create:
+      - "We can build this internally"
+    our_counter: "Build-vs-buy analysis: 6-month payback when [specific condition]"
+
+common_objections:
+  # Seed set - augment as you learn.
+  - objection: "This is too expensive"
+    reframe: "What's the current cost of [pain]? Show ROI math."
+    proof_points:
+      - "Customer X saw [outcome] in [timeframe]"
+  - objection: "We'll do this next quarter"
+    reframe: "What would need to change for this to be a priority now?"
+    proof_points:
+      - "Cost of delay = [stated pain] × [time] = $X"
+  - objection: "We need to talk to more vendors"
+    reframe: "Who else is on your list? I want to make sure you evaluate us fairly - here's how we compare..."
+    proof_points:
+      - "Side-by-side matrix vs [Competitor]"
+
+red_flag_thresholds:
+  # Tune sensitivity by deal age.
+  response_latency_doubling_days: 3
+  reschedule_count_triggering_flag: 2
+  probability_drop_triggering_flag: 0.15
+
+outputs:
+  default_format: "internal"        # slack | crm | internal
+  crm: "hubspot"                    # hubspot | salesforce | attio | none
+  slack_channel: "#sales-debriefs"
+  include_red_flags: true
+
+scoring_overrides:
+  # Adjust default SPICED weights for your motion. Default is all equal.
+  # critical_event_weight: 1.5     # uncomment if your motion requires strong urgency
+  # engagement_weight: 0.7         # uncomment if engagement signals less predictive
+
+language:
+  product_terms:
+    # If your product has specific terminology, list it so the analysis uses it correctly.
+    # e.g. "seats" vs "licenses" vs "workspaces"
+  avoid_phrases:
+    # Phrases that should not appear in generated output (internal jargon, dated language, etc.)
+    - "synergy"
+    - "leverage"  # sorry

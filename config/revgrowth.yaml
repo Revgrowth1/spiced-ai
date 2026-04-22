@@ -1,0 +1,115 @@
+# RevGrowth config - cold email / outbound agency preset
+# Example of a real config. Use as template for your own.
+
+profile:
+  name: "revgrowth"
+  company: "RevGrowth"
+  product_one_liner: "AI-driven cold email infrastructure + campaign management for B2B outbound."
+  url: "https://revgrowth.ai"
+
+icp:
+  industries:
+    - "B2B SaaS"
+    - "AI / ML tooling"
+    - "Services / agencies"
+    - "Infrastructure software"
+  company_size:
+    employees_min: 20
+    employees_max: 500
+    revenue_min_usd: 2000000
+    revenue_max_usd: 100000000
+  titles_primary:
+    - "Founder / CEO"
+    - "VP of Sales"
+    - "Head of Growth"
+    - "Chief Revenue Officer"
+  titles_economic_buyer:
+    - "Founder / CEO"
+    - "CFO"
+  titles_technical_evaluator:
+    - "Head of Growth"
+    - "RevOps Lead"
+    - "Sales Ops"
+
+deal_sizing:
+  smb_max_acv_usd: 36000           # < $3K/mo
+  mid_max_acv_usd: 120000          # $3K-10K/mo
+  # Enterprise rare; case-by-case
+
+sales_motion:
+  typical_cycle_days: 21           # fast - SMB-heavy motion
+  typical_calls_to_close: 2
+  expected_stakeholders_smb: 1
+  expected_stakeholders_mid: 2
+  expected_stakeholders_enterprise: 3
+
+success_metrics:
+  - metric: "meetings booked per month"
+    typical_lift_pct: 300           # vs in-house cold email
+    benchmark_source: "RevGrowth customer data"
+  - metric: "reply rate"
+    typical_lift: "3-8%"
+    benchmark_source: "internal"
+  - metric: "cost per meeting"
+    typical_reduction_pct: 60
+    benchmark_source: "vs in-house SDR"
+
+competitors:
+  - name: "In-house SDR team"
+    positioning: "Higher cost, slower ramp, requires management"
+    common_objections_they_create:
+      - "We should just hire SDRs"
+    our_counter: "3-SDR team = $300K+/yr fully loaded; RevGrowth delivers equivalent pipeline at 30% of that in 2 weeks."
+  - name: "Clay + in-house"
+    positioning: "DIY approach, heavy internal ops burden"
+    common_objections_they_create:
+      - "We use Clay already"
+    our_counter: "Clay is a tool; we're an operating system. We run it for you so your team focuses on closing."
+  - name: "Other outbound agencies"
+    positioning: "Generic spray-and-pray; no AI personalization; poor deliverability"
+    common_objections_they_create:
+      - "We tried an agency and it didn't work"
+    our_counter: "Most agencies don't touch deliverability. We run MillionVerifier + warmup + bounce auto-pause. 4.2x bounce reduction vs industry average."
+
+common_objections:
+  - objection: "We already have an in-house SDR / BDR"
+    reframe: "What's their cost per meeting? We typically layer underneath at 30% of SDR cost and let your SDRs focus on MQLs."
+    proof_points:
+      - "Client X: cut cost/meeting from $320 to $110, SDRs now focus on closing inbound."
+  - objection: "Cold email doesn't work for us"
+    reframe: "What did you try and what was the reply rate? 90% of 'cold email doesn't work' is a deliverability or targeting issue, not a channel issue."
+    proof_points:
+      - "We run MillionVerifier filtering (valid + catch_all isolation); bounce rates stay under 2%."
+  - objection: "We need intro reps / personal network outreach, not cold email"
+    reframe: "Agreed - cold email won't replace your top relationships. It fills the top of the funnel so those relationships compound on warmer conversations."
+  - objection: "We're not ready yet / it's not the right time"
+    reframe: "What would make it the right time? We find most teams wait 2-3 quarters for a moment that never arrives; meanwhile pipeline debt compounds."
+  - objection: "What's your lead list?"
+    reframe: "We don't sell lists. We build TAM per campaign using your ICP, enrich with [BlitzAPI / Prospeo / local-enrich depending on segment], and verify before sending."
+
+red_flag_thresholds:
+  response_latency_doubling_days: 2      # faster motion = tighter threshold
+  reschedule_count_triggering_flag: 2
+  probability_drop_triggering_flag: 0.15
+
+outputs:
+  default_format: "slack"                 # Adam prefers terse; Slack-short is the default
+  crm: "attio"
+  slack_channel: "#sales-revgrowth"
+  include_red_flags: true
+
+scoring_overrides:
+  critical_event_weight: 1.3              # urgency matters more in short-cycle motion
+  decision_weight: 1.2                    # committee dynamics critical even for SMB
+
+language:
+  product_terms:
+    - "campaign" (not "blast" or "send")
+    - "workspace" (EmailBison concept)
+    - "warmup" (always ON, never disabled)
+    - "ELR" (Engaged Lead Rate - RevGrowth's primary campaign metric)
+  avoid_phrases:
+    - "synergy"
+    - "leverage"
+    - "simple as"                         # not Adam's voice
+    - em dashes                           # Adam's preference

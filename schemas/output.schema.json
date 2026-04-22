@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Revgrowth1/spiced-ai/schemas/output.schema.json",
+  "title": "SPICED AI Output",
+  "description": "Structured analysis output. Always returned when output_format=crm. Optional alongside markdown for slack/internal.",
+  "type": "object",
+  "required": ["mode", "generated_at"],
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": ["post_call", "coaching", "pre_call", "red_flags"]
+    },
+    "generated_at": {"type": "string", "format": "date-time"},
+    "deal_id": {"type": "string"},
+    "call_id": {"type": "string"},
+
+    "post_call": {
+      "type": "object",
+      "description": "Present when mode=post_call",
+      "properties": {
+        "prospect": {
+          "type": "object",
+          "properties": {
+            "name": {"type": "string"},
+            "title": {"type": "string"},
+            "company": {"type": "string"}
+          }
+        },
+        "spiced": {
+          "type": "object",
+          "required": ["situation", "pain", "impact", "critical_event", "engagement", "decision"],
+          "properties": {
+            "situation": {"$ref": "#/$defs/spiced_letter"},
+            "pain": {"$ref": "#/$defs/spiced_letter"},
+            "impact": {"$ref": "#/$defs/spiced_letter"},
+            "critical_event": {"$ref": "#/$defs/spiced_letter"},
+            "engagement": {"$ref": "#/$defs/spiced_letter"},
+            "decision": {"$ref": "#/$defs/spiced_letter"}
+          }
+        },
+        "probability": {
+          "type": "object",
+          "required": ["raw", "final", "band", "stage"],
+          "properties": {
+            "raw": {"type": "integer", "minimum": 0, "maximum": 18},
+            "multipliers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "reason": {"type": "string"},
+                  "value": {"type": "number"}
+                }
+              }
+            },
+            "final": {"type": "number", "minimum": 0, "maximum": 18},
+            "band": {"type": "string", "enum": ["90%+", "70-80%", "50-70%", "30-50%", "<30%"]},
+            "stage": {"type": "string", "enum": ["Committed", "Strong", "Viable", "Developing", "Exploratory"]},
+            "math_display": {"type": "string", "description": "Human-readable math, e.g. 'S=2 P=3 I=2 C=1 E=2 D=2 = 12 × 0.7 = 8.4'"}
+          }
+        },
+        "next_actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["action", "owner", "due"],
+            "properties": {
+              "action": {"type": "string"},
+              "owner": {"type": "string"},
+              "due": {"type": "string", "format": "date"},
+              "priority": {"type": "string", "enum": ["high", "med", "low"]}
+            }
+          }
+        },
+        "risks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["risk", "probability", "severity"],
+            "properties": {
+              "risk": {"type": "string"},
+              "probability": {"type": "string", "enum": ["high", "med", "low"]},
+              "severity": {"type": "string", "enum": ["high", "med", "low"]},
+              "mitigation": {"type": "string"}
+            }
+          }
+        },
+        "competitors_mentioned": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "positioning": {"type": "string"},
+              "threat_level": {"type": "string", "enum": ["high", "med", "low"]}
+            }
+          }
+        },
+        "biggest_lever": {"type": "string", "description": "The single highest-leverage action this week"}
+      }
+    },
+
+    "coaching": {
+      "type": "object",
+      "description": "Present when mode=coaching",
+      "properties": {
+        "rep": {"type": "string"},
+        "grade": {"type": "string", "enum": ["A", "B", "C", "D", "F"]},
+        "weighted_score": {"type": "integer", "minimum": 0, "maximum": 90},
+        "dimensions": {
+          "type": "object",
+          "properties": {
+            "discovery_depth": {"$ref": "#/$defs/coaching_dimension"},
+            "question_quality": {"$ref": "#/$defs/coaching_dimension"},
+            "listen_talk_ratio": {"$ref": "#/$defs/coaching_dimension"},
+            "objection_handling": {"$ref": "#/$defs/coaching_dimension"},
+            "critical_event": {"$ref": "#/$defs/coaching_dimension"},
+            "decision_committee": {"$ref": "#/$defs/coaching_dimension"},
+            "competitive_positioning": {"$ref": "#/$defs/coaching_dimension"},
+            "next_step_commitment": {"$ref": "#/$defs/coaching_dimension"}
+          }
+        },
+        "strengths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dimension": {"type": "string"},
+              "quote": {"type": "string"},
+              "timestamp_sec": {"type": "number"},
+              "why_it_worked": {"type": "string"}
+            }
+          }
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "dimension": {"type": "string"},
+              "quote": {"type": "string"},
+              "timestamp_sec": {"type": "number"},
+              "issue": {"type": "string"},
+              "reframe": {"type": "string"}
+            }
+          }
+        },
+        "coaching_actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action": {"type": "string"},
+              "practice_scenario": {"type": "string"},
+              "deadline": {"type": "string", "format": "date"}
+            }
+          }
+        }
+      }
+    },
+
+    "pre_call": {
+      "type": "object",
+      "description": "Present when mode=pre_call",
+      "properties": {
+        "meeting": {
+          "type": "object",
+          "properties": {
+            "date": {"type": "string", "format": "date-time"},
+            "type": {"type": "string"},
+            "duration_min": {"type": "integer"},
+            "attendees": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "title": {"type": "string"},
+                  "role": {"type": "string", "enum": ["champion", "economic_buyer", "technical_eval", "skeptic", "unknown"]}
+                }
+              }
+            }
+          }
+        },
+        "goal": {"type": "string"},
+        "spiced_gaps": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "properties": {
+              "letter": {"type": "string", "enum": ["S", "P", "I", "C", "E", "D"]},
+              "gap": {"type": "string"},
+              "questions": {"type": "array", "items": {"type": "string"}},
+              "listen_for": {"type": "string"}
+            }
+          }
+        },
+        "objections": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "properties": {
+              "objection": {"type": "string"},
+              "response": {"type": "string"},
+              "proof_point": {"type": "string"}
+            }
+          }
+        },
+        "driving_to": {
+          "type": "object",
+          "properties": {
+            "best_case": {"type": "string"},
+            "fallback": {"type": "string"},
+            "close_line": {"type": "string"}
+          }
+        },
+        "risk_to_neutralize": {"type": "string"},
+        "champion_action": {
+          "type": "object",
+          "properties": {
+            "give": {"type": "string"},
+            "ask_for": {"type": "string"}
+          }
+        }
+      }
+    },
+
+    "red_flags": {
+      "type": "object",
+      "description": "Present when mode=red_flags, or embedded in post_call when include_red_flags=true",
+      "properties": {
+        "flag_count": {"type": "integer"},
+        "max_severity": {"type": "string", "enum": ["critical", "high", "medium", "low", "none"]},
+        "flags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["category", "severity", "signals"],
+            "properties": {
+              "category": {
+                "type": "string",
+                "enum": [
+                  "champion_erosion",
+                  "budget_shift",
+                  "competitive_displacement",
+                  "vocabulary_regression",
+                  "timeline_slippage",
+                  "stakeholder_adds",
+                  "process_opacity",
+                  "silent_objection",
+                  "probability_drift"
+                ]
+              },
+              "severity": {"type": "string", "enum": ["critical", "high", "medium", "low"]},
+              "signals": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "evidence": {"type": "string"},
+                    "source": {"type": "string", "enum": ["transcript", "email", "crm", "research"]},
+                    "timestamp_sec": {"type": "number"}
+                  }
+                }
+              },
+              "headline": {"type": "string"},
+              "impact": {"type": "string"},
+              "mitigation": {"type": "string"},
+              "deadline": {"type": "string", "format": "date"}
+            }
+          }
+        }
+      }
+    }
+  },
+
+  "$defs": {
+    "spiced_letter": {
+      "type": "object",
+      "required": ["score"],
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 3},
+        "summary": {"type": "string"},
+        "quotes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quote": {"type": "string"},
+              "speaker": {"type": "string"},
+              "timestamp_sec": {"type": "number"}
+            }
+          }
+        },
+        "metrics": {"type": "array", "items": {"type": "string"}, "description": "For pain/impact: quantified data points"},
+        "gaps": {"type": "array", "items": {"type": "string"}, "description": "What's missing that should be asked next"}
+      }
+    },
+    "coaching_dimension": {
+      "type": "object",
+      "required": ["score"],
+      "properties": {
+        "score": {"type": "integer", "minimum": 0, "maximum": 5},
+        "weight": {"type": "integer"},
+        "weighted": {"type": "integer"},
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "timestamp_sec": {"type": "number"},
+              "quote": {"type": "string"},
+              "assessment": {"type": "string"}
+            }
+          }
+        }
+      }
+    }
+  }
+}
