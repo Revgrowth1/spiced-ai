@@ -154,9 +154,9 @@ Repo: github.com/Revgrowth1/spiced-ai
 
 MIT license. 3,138 lines. Four modes. Plugs into Fireflies, Gong, Sybill, HubSpot, Salesforce, Slack.
 
-RT tweet 1 if your team's transcripts deserve better than AI summary slop.
+If you want this wired into your pipeline end-to-end, book a call: calendly.com/adam-revgrowth/30min
 
-Follow for more AI GTM infrastructure deep dives.
+RT tweet 1 if your team's transcripts deserve better than AI summary slop. Follow for more AI GTM infrastructure deep dives.
 
 ---
 
@@ -221,7 +221,7 @@ Repo: github.com/Revgrowth1/spiced-ai
 
 Understanding came first. Systems came later. We manually scored SPICED on every call for months before codifying any of this. The system encodes what we learned. It does not replace the learning.
 
-If you want this plus the full outbound motion done for you, we do that at RevGrowth. Link in bio.
+If you want this plus the full outbound motion done for you, book a call: https://calendly.com/adam-revgrowth/30min
 
 Hope you find this one useful.
 ```

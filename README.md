@@ -145,7 +145,7 @@ RevGrowth runs outbound for B2B SaaS companies. We sit on hundreds of sales call
 
 So we built it. Then realized the prompt was 80% of the value. Open-sourcing the rest is a rounding error on a weekend.
 
-If you're a B2B team that wants this wired into your pipeline end-to-end: [we do that](https://revgrowth.ai). If you're a solo operator who wants to run it yourself: clone and go.
+If you're a B2B team that wants this wired into your pipeline end-to-end: [book a call](https://calendly.com/adam-revgrowth/30min). If you're a solo operator who wants to run it yourself: clone and go.
 
 ---
 
@@ -262,4 +262,4 @@ MIT. Use it, fork it, ship it.
 
 We build cold email infrastructure and run outbound for B2B SaaS companies. AI-driven deliverability, verified lists, managed campaigns, no SDRs required. [revgrowth.ai](https://revgrowth.ai)
 
-If you want the team behind this tool managing your outbound: [book a call](https://revgrowth.ai). If you want to run the tool yourself: you already have everything you need above.
+If you want the team behind this tool managing your outbound: [book a call](https://calendly.com/adam-revgrowth/30min). If you want to run the tool yourself: you already have everything you need above.

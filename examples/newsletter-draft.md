@@ -167,7 +167,7 @@ Config-driven. Copy config/default.yaml to config/yourname.yaml and set your ICP
 How I Can Help
 
 > Clone spiced-ai: https://github.com/Revgrowth1/spiced-ai
-> Book a call (if you want this plus the outbound motion done for you): https://revgrowth.ai
+> Book a call (if you want this plus the outbound motion done for you): https://calendly.com/adam-revgrowth/30min
 > Outbound Secrets course (70+ training videos on everything we implement): https://outbound-secrets.com (code REV20 for 20% off)
 > Reply to this email with your weirdest sales call and I'll run spiced-ai on it
 
